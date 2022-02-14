@@ -22,7 +22,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    //IDs for all the numeric buttons
     private int[] numButtons = {R.id.btnZero, R.id.btnOne, R.id.btnTwo, R.id.btnThree
             , R.id.btnFour,
     R.id.btnFive, R.id.btnSix, R.id.btnSeven, R.id.btnEight, R.id.btnNine};
@@ -45,10 +44,8 @@ public class MainActivity extends AppCompatActivity {
         btnSpeak = findViewById(R.id.speak);
         txtScreen = findViewById(R.id.txtScreen);
 
-        //find and set onclicklistener to number buttons
         setNumberOnClickListener();
 
-        //find and set onclicklistener to operator buttons
         setOperatorOnClickListener();
 
     }
@@ -58,21 +55,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                //just append/set the text of clicked button
                 Button button = (Button) view;
                 if (stateError) {
-                    //if current state is error, replace the error message
                     txtScreen.setText(button.getText());
                     stateError = false;
                 } else {
                     txtScreen.append(button.getText());
                 }
-                //set the FLAG
                 lastNumber = true;
             }
         };
 
-        //assign the listener to all the number button
         for (int id : numButtons) {
             findViewById(id).setOnClickListener(listener);
         }
@@ -82,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener listener = new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                //if the current state is error do not append the operator
-                //if last input is number only, append the operator
                 if (lastNumber && !stateError) {
                     Button button = (Button) view;
                     txtScreen.append(button.getText());
@@ -93,12 +84,10 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        //assign the listener to all the operator button
         for (int i : opButtons) {
             findViewById(i).setOnClickListener(listener);
         }
 
-        //decimal point
         findViewById(R.id.btnDot).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                     txtScreen.setText("try again");
                     stateError = false;
                 } else {
-                    promptSpeechInput();
+                    speechInput();
                 }
                 lastNumber = true;
             }
@@ -169,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void promptSpeechInput() {
+    private void speechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -185,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //receiving speech input
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
